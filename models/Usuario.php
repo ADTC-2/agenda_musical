@@ -16,7 +16,7 @@ class UsuarioModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
+    
     public function editar($id) {
         $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE id = :id');
         $stmt->bindParam(':id', $id);
@@ -38,7 +38,23 @@ class UsuarioModel {
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
-
+        // Função para autenticar o usuário
+    public function autenticar($email, $senha) {
+        $usuario = $this->getByEmail($email);
+        
+        if ($usuario && password_verify($senha, $usuario['senha'])) {
+            return $usuario; // Retorna os dados do usuário autenticado
+        }
+        return false; // Retorna falso se as credenciais forem inválidas
+    }
+    
+    // Função para obter um usuário pelo email
+    private function getByEmail($email) {
+        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE email = :email');
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     public function cadastrar($nome, $email, $senha, $tipo) {
         $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM usuarios WHERE email = :email');
         $stmt->bindParam(':email', $email);
