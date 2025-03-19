@@ -1,0 +1,159 @@
+
+
+
+
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    tipo ENUM('admin', 'musico', 'usuario') DEFAULT 'usuario',
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE cultos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    data_hora DATETIME NOT NULL,
+    local VARCHAR(255),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE musicas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    cantor_banda VARCHAR(100),
+    tom VARCHAR(5),
+    bpm INT,
+    link VARCHAR(255),
+    arquivo VARCHAR(255),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+CREATE TABLE repertorios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    culto_id INT NOT NULL,
+    musica_id INT NOT NULL,
+    categoria ENUM('criança', 'adolescente', 'jovem', 'senhoras') NOT NULL,
+    FOREIGN KEY (culto_id) REFERENCES cultos(id) ON DELETE CASCADE,
+    FOREIGN KEY (musica_id) REFERENCES musicas(id) ON DELETE CASCADE
+);
+
+
+
+
+CREATE TABLE escalas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    culto_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    instrumento VARCHAR(50),
+    FOREIGN KEY (culto_id) REFERENCES cultos(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+
+
+
+
+CREATE TABLE tokens_recuperacao (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expira_em DATETIME NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+
+
+/agenda_musical/
+│── /assets/               # Arquivos estáticos (CSS, JS, imagens)
+│   ├── /css/              # Arquivos CSS (Bootstrap e estilos personalizados)
+│   ├── /js/               # Scripts JavaScript
+│   │   ├── ajax.js        # Funções gerais para chamadas AJAX
+│   │   ├── usuario.js     # Scripts específicos para usuários
+│   │   ├── culto.js       # Scripts específicos para cultos
+│   │   ├── musica.js      # Scripts específicos para músicas
+│   │   ├── repertorio.js  # Scripts específicos para repertórios
+│   │   ├── escala.js      # Scripts específicos para escalas
+│   ├── /img/              # Imagens do projeto
+│
+│── /config/               # Arquivos de configuração do banco de dados e constantes
+│   ├── database.php       # Configuração da conexão com o banco de dados
+│   ├── config.php         # Configurações gerais do sistema
+│
+│── /controllers/          # Controladores que lidam com as requisições
+│   ├── UsuarioController.php
+│   ├── CultoController.php
+│   ├── MusicaController.php
+│   ├── RepertorioController.php
+│   ├── EscalaController.php
+│   ├── AuthController.php
+│
+│── /models/               # Modelos que interagem com o banco de dados
+│   ├── Usuario.php
+│   ├── Culto.php
+│   ├── Musica.php
+│   ├── Repertorio.php
+│   ├── Escala.php
+│
+│── /views/                # Páginas visuais do sistema
+│   ├── /partials/         # Cabeçalhos, rodapés e componentes reutilizáveis
+│   ├── home.php
+│   ├── login.php
+│   ├── dashboard.php
+│
+│── /ajax/                 # Arquivos PHP para processar requisições AJAX
+│   ├── usuario_ajax.php
+│   ├── culto_ajax.php
+│   ├── musica_ajax.php
+│   ├── repertorio_ajax.php
+│   ├── escala_ajax.php
+│
+│── /routes/               # Arquivo de rotas do sistema
+│   ├── web.php
+│
+│── /public/               # Pasta pública (ponto de entrada do sistema)
+│   ├── index.php          # Página inicial que carrega tudo
+│
+│── .env                   # Configurações sensíveis (banco de dados, API keys, etc.)
+│── .htaccess              # Arquivo de reescrita para URLs amigáveis
+│── README.md              # Documentação do projeto
+
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Agenda Musical</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <link rel="stylesheet" href="../../../public/assets/css/auth/login.css">   
+</head>
+<body>
+    <div class="login-container">
+        <img src="../../assets/images/LOGO LOUVOR AGENDA.png" alt="Logo" class="logo">        
+        <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Usuário" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" placeholder="Senha" required>
+        </div>
+        <button type="submit" class="btn btn-laranja">Entrar</button>
+        <a href="#">Esqueci a senha</a>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+

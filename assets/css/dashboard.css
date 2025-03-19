@@ -1,0 +1,119 @@
+/* Menu inferior fixo */
+.menu-bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    z-index: 1000;
+}
+
+.menu-bottom nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* Ajuste para evitar espaçamento excessivo */
+}
+
+.menu-item {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.menu-item i {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.menu-item:hover {
+    color: #c0392b; /* Cor de destaque ao passar o mouse */
+    transform: scale(1.1);
+}
+
+/* Logo */
+#logo_vermelho {
+    width: 161px;
+    height: 52px;
+    margin-top: 70px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Seção de eventos */
+.events {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.event {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px; /* Aumentando o tamanho máximo dos cards */
+}
+
+.event-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    display: inline-block; /* Para garantir que os títulos fiquem lado a lado */
+    margin-right: 73px; /* Espaço entre os títulos */
+}
+
+.event-day {
+    font-size: 14px;
+    color: #666;
+}
+.event {
+    display: flex;
+    justify-content: space-between; /* Para dar espaço entre as duas divs */
+}
+
+.event-day, .event-info {
+    display: flex;
+    flex-direction: column; /* Para manter as divs internas em coluna, como você já tinha */
+}
+
+.event-day {
+    margin-right: 20px; /* Para dar um espaço entre os blocos */
+}
+.date a {
+    text-decoration: none;
+    color: inherit; /* Herda a cor do elemento pai */
+}
+/* Responsividade para telas menores */
+@media (max-width: 500px) {
+    .menu-bottom nav {
+        flex-wrap: wrap;
+    }
+    .menu-item {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    .event {
+        max-width: 90%; /* Aproveita melhor o espaço em telas pequenas */
+    }
+
+}
+
