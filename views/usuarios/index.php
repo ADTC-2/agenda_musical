@@ -217,7 +217,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
     <!-- Modal para excluir usuário -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" style="display: block;" inert>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
