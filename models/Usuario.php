@@ -1,6 +1,4 @@
 <?php
-// models/UsuarioModel.php
-
 require_once '../config/database.php';
 
 class UsuarioModel {
@@ -19,14 +17,14 @@ class UsuarioModel {
     
     public function editar($id) {
         $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE id = :id');
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function atualizar($id, $nome, $email, $tipo) {
         $stmt = $this->pdo->prepare('UPDATE usuarios SET nome = :nome, email = :email, tipo = :tipo WHERE id = :id');
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->bindParam(':nome', $nome);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':tipo', $tipo);
@@ -35,18 +33,17 @@ class UsuarioModel {
 
     public function deletar($id) {
         $stmt = $this->pdo->prepare('DELETE FROM usuarios WHERE id = :id');
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
     public function cadastrar($nome, $email, $senha, $tipo) {
         // Verifica se o e-mail já existe
-        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM usuarios WHERE email = :email');
+        $stmt = $this->pdo->prepare('SELECT id FROM usuarios WHERE email = :email');
         $stmt->bindParam(':email', $email);
         $stmt->execute();
-        $emailExistente = $stmt->fetchColumn();
 
-        if ($emailExistente > 0) {
+        if ($stmt->fetch()) {
             return ["status" => "error", "message" => "O email já está em uso!"];
         }
 
@@ -57,10 +54,16 @@ class UsuarioModel {
         $stmt->bindParam(':senha', password_hash($senha, PASSWORD_DEFAULT));
         $stmt->bindParam(':tipo', $tipo);
 
-        if ($stmt->execute()) {
-            return ["status" => "success", "message" => "Usuário cadastrado com sucesso!"];
-        } else {
-            return ["status" => "error", "message" => "Erro ao cadastrar usuário."];
-        }
+        return $stmt->execute() ? ["status" => "success", "message" => "Usuário cadastrado com sucesso!"] : ["status" => "error", "message" => "Erro ao cadastrar usuário."];
     }
-} 
+
+    public function autenticar($email, $senha) {
+        $stmt = $this->pdo->prepare("SELECT id, nome, email, senha, tipo FROM usuarios WHERE email = :email");
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return ($usuario && password_verify($senha, $usuario['senha'])) ? $usuario : false;
+    }
+}
+?>

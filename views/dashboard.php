@@ -57,15 +57,14 @@ $eventos = array_fill(0, 6, ['mes' => 'Março', 'status' => 'Finalizado']); // S
 </head>
 
 <body>
-    <header class="header">
-        <nav class="navbar bg-white shadow-sm fixed-top">
+<header class="header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
             <div class="container-fluid">
                 <button class="navbar-toggler me-auto" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Abrir menu"
-                    style="border: none; outline: none; box-shadow: none;">
+                    data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Abrir menu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <a class="navbar-brand" href="../views/dashboard.php">Agenda Musical</a>
+                <a class="navbar-brand" href="dashboard.php">Agenda Musical</a>
 
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="menuLateral">
                     <div class="offcanvas-header">
@@ -75,8 +74,13 @@ $eventos = array_fill(0, 6, ['mes' => 'Março', 'status' => 'Finalizado']); // S
                     <div class="offcanvas-body">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link active" href="../views/dashboard.php">
-                                    <i class="fas fa-home"></i> Início
+                                <a class="nav-link active" href="dashboard.php">
+                                    <i class="fas fa-home"></i> Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="../views/cultos/index.php">
+                                    <i class="fas fa-home"></i> Cultos
                                 </a>
                             </li>
                             <li class="nav-item">

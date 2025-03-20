@@ -107,8 +107,13 @@ if (session_status() === PHP_SESSION_NONE) {
                     <div class="offcanvas-body">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link active" href="../views/dashboard.php">
+                                <a class="nav-link active" href="../dashboard.php">
                                     <i class="fas fa-home"></i> Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="../cultos/index.php">
+                                    <i class="fas fa-home"></i> Cultos
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -231,7 +236,27 @@ if (session_status() === PHP_SESSION_NONE) {
             </div>
         </div>
     </div>
-
+    <br><br>
+    <!-- Menu inferior fixo para Admin -->
+    <footer class="menu-bottom">
+        <nav>
+            <a href="../escalas/index.php" class="menu-item" aria-label="Escalas">
+                <i class="fas fa-calendar-alt"></i> Escalas
+            </a>
+            <a href="../repertorio/index.php" class="menu-item" aria-label="Repertório">
+                <i class="fas fa-book"></i> Repertório
+            </a>
+            <a href="../musicas/index.php" class="menu-item" aria-label="Músicas">
+                <i class="fas fa-music"></i> Músicas
+            </a>
+            <a href="../usuarios/index.php" class="menu-item" aria-label="Usuários">
+                <i class="fas fa-users"></i> Usuários
+            </a>
+            <a href="../avisos/index.php" class="menu-item" aria-label="Avisos">
+                <i class="fas fa-bell"></i> Avisos
+            </a>
+        </nav>
+    </footer>
     <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -247,10 +272,10 @@ $(document).ready(function () {
             success: function(response) {
                 console.log(response); // Verifique o conteúdo da resposta
                 try {
-                    // Verifique se a resposta é um array (já é um objeto JavaScript válido)
-                    if (Array.isArray(response)) {
+                    // Verifica se a resposta tem status "success" e se há dados
+                    if (response.status === "success" && Array.isArray(response.data)) {
                         let userCards = '';
-                        response.forEach(function(user) {
+                        response.data.forEach(function(user) {
                             userCards += `
                                 <div class="col-md-4 col-lg-3 mb-4">
                                     <div class="user-card">
@@ -267,7 +292,7 @@ $(document).ready(function () {
                         });
                         $('#usuariosList').html(userCards);
                     } else {
-                        console.error("Resposta não é um array ou objeto válido", response);
+                        console.error("Resposta não contém dados válidos:", response);
                         alert("Erro ao processar a resposta do servidor.");
                     }
                 } catch (e) {
@@ -347,11 +372,11 @@ $(document).ready(function () {
             data: { action: 'editar', id: id },
             success: function (response) {
                 try {
-                    if (response) {
-                        $('#editId').val(response.id);
-                        $('#editNome').val(response.nome);
-                        $('#editEmail').val(response.email);
-                        $('#editTipo').val(response.tipo);
+                    if (response.status === "success" && response.data) {
+                        $('#editId').val(response.data.id);
+                        $('#editNome').val(response.data.nome);
+                        $('#editEmail').val(response.data.email);
+                        $('#editTipo').val(response.data.tipo);
                         $('#editModal').modal('show');
                     } else {
                         alert('Erro ao carregar os dados do usuário. Tente novamente.');
@@ -434,7 +459,6 @@ $(document).ready(function () {
         $('#deleteModal').modal('show');
     };
 });
-
 </script>
 
 </body>

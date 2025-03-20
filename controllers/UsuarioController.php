@@ -13,7 +13,7 @@ try {
         case 'listar':
             $usuarios = $usuarioModel->listar();
             if (is_array($usuarios)) {
-                echo json_encode($usuarios); // Resposta correta em JSON
+                echo json_encode(["status" => "success", "data" => $usuarios]); 
             } else {
                 echo json_encode(["status" => "error", "message" => "Erro ao listar usuários."]);
             }
@@ -22,7 +22,12 @@ try {
         case 'editar':
             $id = $_POST['id'] ?? null;
             if ($id) {
-                echo json_encode($usuarioModel->editar($id));
+                $usuario = $usuarioModel->editar($id);
+                if ($usuario) {
+                    echo json_encode(["status" => "success", "data" => $usuario]); 
+                } else {
+                    echo json_encode(["status" => "error", "message" => "Usuário não encontrado."]);
+                }
             } else {
                 echo json_encode(["status" => "error", "message" => "ID não fornecido."]);
             }
@@ -54,7 +59,8 @@ try {
             $email = $_POST['email'] ?? '';
             $senha = $_POST['senha'] ?? '';
             $tipo = $_POST['tipo'] ?? '';
-            echo json_encode($usuarioModel->cadastrar($nome, $email, $senha, $tipo));
+            $resultado = $usuarioModel->cadastrar($nome, $email, $senha, $tipo);
+            echo json_encode($resultado);  // Resposta diretamente do Model
             exit();
 
         default:
@@ -65,4 +71,4 @@ try {
     echo json_encode(["status" => "error", "message" => "Erro: " . $e->getMessage()]);
     exit();
 }   
-?> 
+?>
