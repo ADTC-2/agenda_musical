@@ -38,24 +38,9 @@ class UsuarioModel {
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
-        // Função para autenticar o usuário
-    public function autenticar($email, $senha) {
-        $usuario = $this->getByEmail($email);
-        
-        if ($usuario && password_verify($senha, $usuario['senha'])) {
-            return $usuario; // Retorna os dados do usuário autenticado
-        }
-        return false; // Retorna falso se as credenciais forem inválidas
-    }
-    
-    // Função para obter um usuário pelo email
-    private function getByEmail($email) {
-        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE email = :email');
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+
     public function cadastrar($nome, $email, $senha, $tipo) {
+        // Verifica se o e-mail já existe
         $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM usuarios WHERE email = :email');
         $stmt->bindParam(':email', $email);
         $stmt->execute();
@@ -65,16 +50,17 @@ class UsuarioModel {
             return ["status" => "error", "message" => "O email já está em uso!"];
         }
 
+        // Inserção do novo usuário
         $stmt = $this->pdo->prepare('INSERT INTO usuarios (nome, email, senha, tipo) VALUES (:nome, :email, :senha, :tipo)');
         $stmt->bindParam(':nome', $nome);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':senha', password_hash($senha, PASSWORD_DEFAULT));
         $stmt->bindParam(':tipo', $tipo);
+
         if ($stmt->execute()) {
             return ["status" => "success", "message" => "Usuário cadastrado com sucesso!"];
         } else {
             return ["status" => "error", "message" => "Erro ao cadastrar usuário."];
         }
     }
-}
-?>
+} 

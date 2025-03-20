@@ -8,7 +8,7 @@ class AuthController {
     private $usuarioModel;
 
     public function __construct() {
-        $this->usuarioModel = new Usuario();
+        $this->usuarioModel = new UsuarioModel();
     }
 
     public function loginView() {

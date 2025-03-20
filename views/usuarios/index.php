@@ -233,161 +233,208 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-    $(document).ready(function () {
-        // Função para carregar usuários
-        function carregarUsuarios() {
-            $.ajax({
-                url: '../../controllers/UsuarioController.php',
-                method: 'GET',
-                data: { action: 'listar' },
-                success: function (response) {
-                    const data = JSON.parse(response);
-                    let userCards = '';
-                    data.forEach(function (user) {
-                        userCards += `
-                            <div class="col-md-4 col-lg-3 mb-4">
-                                <div class="user-card">
-                                    <h5>${user.nome}</h5>
-                                    <p><strong>Email:</strong> ${user.email}</p>
-                                    <p><strong>Tipo:</strong> ${user.tipo}</p>
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-info btn-sm flex-grow-1" onclick="editUser(${user.id})">Editar</button>
-                                        <button class="btn btn-danger btn-sm flex-grow-1" onclick="deleteUser(${user.id})">Excluir</button>
+<script>
+$(document).ready(function () {
+    // Função para carregar usuários
+    function carregarUsuarios() {
+        $.ajax({
+            url: '../../controllers/UsuarioController.php',
+            method: 'GET',
+            data: { action: 'listar' },
+            success: function(response) {
+                console.log(response); // Verifique o conteúdo da resposta
+                try {
+                    // Verifique se a resposta é um array (já é um objeto JavaScript válido)
+                    if (Array.isArray(response)) {
+                        let userCards = '';
+                        response.forEach(function(user) {
+                            userCards += `
+                                <div class="col-md-4 col-lg-3 mb-4">
+                                    <div class="user-card">
+                                        <h5>${user.nome}</h5>
+                                        <p><strong>Email:</strong> ${user.email}</p>
+                                        <p><strong>Tipo:</strong> ${user.tipo}</p>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-info btn-sm flex-grow-1" onclick="editUser(${user.id})">Editar</button>
+                                            <button class="btn btn-danger btn-sm flex-grow-1" onclick="deleteUser(${user.id})">Excluir</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        `;
-                    });
-                    $('#usuariosList').html(userCards);
+                            `;
+                        });
+                        $('#usuariosList').html(userCards);
+                    } else {
+                        console.error("Resposta não é um array ou objeto válido", response);
+                        alert("Erro ao processar a resposta do servidor.");
+                    }
+                } catch (e) {
+                    console.error("Erro ao processar a resposta: ", e);
+                    alert("Erro ao processar a resposta do servidor.");
                 }
-            });
-        }
+            },
+            error: function() {
+                alert('Erro ao fazer a requisição. Tente novamente.');
+            }
+        });
+    }
 
-        // Função para filtrar os cartões de usuários
-        function filterUsers() {
-            const searchTerm = $('#searchInput').val().toLowerCase();
-            $('.user-card').each(function () {
-                const userName = $(this).find('h5').text().toLowerCase();
-                const userEmail = $(this).find('p').text().toLowerCase();
-                if (userName.includes(searchTerm) || userEmail.includes(searchTerm)) {
-                    $(this).parent().show();
-                } else {
-                    $(this).parent().hide();
-                }
-            });
-        }
+    // Função para filtrar os cartões de usuários
+    function filterUsers() {
+        const searchTerm = $('#searchInput').val().toLowerCase();
+        $('.user-card').each(function () {
+            const userName = $(this).find('h5').text().toLowerCase();
+            const userEmail = $(this).find('p').text().toLowerCase();
+            if (userName.includes(searchTerm) || userEmail.includes(searchTerm)) {
+                $(this).parent().show();
+            } else {
+                $(this).parent().hide();
+            }
+        });
+    }
 
-        // Adicionar evento de escuta ao campo de busca
-        $('#searchInput').on('input', filterUsers);
+    // Adicionar evento de escuta ao campo de busca
+    $('#searchInput').on('input', filterUsers);
 
-        // Carregar usuários ao abrir a página
-        carregarUsuarios();
+    // Carregar usuários ao abrir a página
+    carregarUsuarios();
 
-        // Cadastrar usuário
-        $('#createUserForm').on('submit', function (e) {
-            e.preventDefault();
-            const nome = $('#createNome').val();
-            const email = $('#createEmail').val();
-            const senha = $('#createSenha').val();
-            const tipo = $('#createTipo').val();
+    // Cadastrar usuário
+    $('#createUserForm').on('submit', function (e) {
+        e.preventDefault();
+        const nome = $('#createNome').val();
+        const email = $('#createEmail').val();
+        const senha = $('#createSenha').val();
+        const tipo = $('#createTipo').val();
 
-            $.ajax({
-                url: '../../controllers/UsuarioController.php',
-                method: 'POST',
-                data: {
-                    action: 'cadastrar',
-                    nome: nome,
-                    email: email,
-                    senha: senha,
-                    tipo: tipo
-                },
-                success: function (response) {
-                    const data = JSON.parse(response);
-                    if (data.status === "success") {
-                        alert(data.message);
+        $.ajax({
+            url: '../../controllers/UsuarioController.php',
+            method: 'POST',
+            data: {
+                action: 'cadastrar',
+                nome: nome,
+                email: email,
+                senha: senha,
+                tipo: tipo
+            },
+            success: function (response) {
+                try {
+                    if (response.status === "success") {
+                        alert(response.message);
                         $('#createModal').modal('hide');
                         carregarUsuarios();
                     } else {
-                        alert(data.message);
+                        alert(response.message);
                     }
+                } catch (error) {
+                    console.error('Erro ao processar a resposta:', error);
+                    alert('Erro ao cadastrar o usuário. Tente novamente.');
                 }
-            });
+            },
+            error: function() {
+                alert('Erro ao fazer a requisição. Tente novamente.');
+            }
         });
+    });
 
-        // Editar usuário
-        window.editUser = function (id) {
-            $.ajax({
-                url: `../../controllers/UsuarioController.php`,
-                method: 'GET',
-                data: { action: 'editar', id: id },
-                success: function (response) {
-                    const data = JSON.parse(response);
-                    $('#editId').val(data.id);
-                    $('#editNome').val(data.nome);
-                    $('#editEmail').val(data.email);
-                    $('#editTipo').val(data.tipo);
-                    $('#editModal').modal('show');
+    // Editar usuário
+    window.editUser = function (id) {
+        $.ajax({
+            url: `../../controllers/UsuarioController.php`,
+            method: 'POST',
+            data: { action: 'editar', id: id },
+            success: function (response) {
+                try {
+                    if (response) {
+                        $('#editId').val(response.id);
+                        $('#editNome').val(response.nome);
+                        $('#editEmail').val(response.email);
+                        $('#editTipo').val(response.tipo);
+                        $('#editModal').modal('show');
+                    } else {
+                        alert('Erro ao carregar os dados do usuário. Tente novamente.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao processar a resposta:', error);
+                    alert('Erro ao carregar os dados do usuário. Tente novamente.');
                 }
-            });
-        };
+            },
+            error: function() {
+                alert('Erro ao fazer a requisição. Tente novamente.');
+            }
+        });
+    };
 
-        // Atualizar usuário
-        $('#editUserForm').on('submit', function (e) {
-            e.preventDefault();
-            const id = $('#editId').val();
-            const nome = $('#editNome').val();
-            const email = $('#editEmail').val();
-            const tipo = $('#editTipo').val();
+    // Atualizar usuário
+    $('#editUserForm').on('submit', function (e) {
+        e.preventDefault();
+        const id = $('#editId').val();
+        const nome = $('#editNome').val();
+        const email = $('#editEmail').val();
+        const tipo = $('#editTipo').val();
 
-            $.ajax({
-                url: '../../controllers/UsuarioController.php',
-                method: 'POST',
-                data: {
-                    action: 'update',
-                    id: id,
-                    nome: nome,
-                    email: email,
-                    tipo: tipo
-                },
-                success: function (response) {
-                    const data = JSON.parse(response);
-                    if (data.status === "success") {
-                        alert(data.message);
+        $.ajax({
+            url: '../../controllers/UsuarioController.php',
+            method: 'POST',
+            data: {
+                action: 'update',
+                id: id,
+                nome: nome,
+                email: email,
+                tipo: tipo
+            },
+            success: function (response) {
+                try {
+                    if (response.status === "success") {
+                        alert(response.message);
                         $('#editModal').modal('hide');
                         carregarUsuarios();
                     } else {
-                        alert(data.message);
+                        alert(response.message);
                     }
+                } catch (error) {
+                    console.error('Erro ao processar a resposta:', error);
+                    alert('Erro ao atualizar o usuário. Tente novamente.');
                 }
-            });
+            },
+            error: function() {
+                alert('Erro ao fazer a requisição. Tente novamente.');
+            }
         });
+    });
 
-        // Excluir usuário
-        window.deleteUser = function (id) {
-            $('#deleteConfirm').off('click').on('click', function () {
-                $.ajax({
-                    url: `../../controllers/UsuarioController.php`,
-                    method: 'GET',
-                    data: { action: 'delete', id: id },
-                    success: function (response) {
-                        const data = JSON.parse(response);
-                        if (data.status === "success") {
-                            alert(data.message);
+    // Excluir usuário
+    window.deleteUser = function (id) {
+        $('#deleteConfirm').off('click').on('click', function () {
+            $.ajax({
+                url: `../../controllers/UsuarioController.php`,
+                method: 'POST',
+                data: { action: 'delete', id: id },
+                success: function (response) {
+                    try {
+                        if (response.status === "success") {
+                            alert(response.message);
                             $('#deleteModal').modal('hide');
                             carregarUsuarios();
                         } else {
-                            alert(data.message);
+                            alert(response.message);
                         }
+                    } catch (error) {
+                        console.error('Erro ao processar a resposta:', error);
+                        alert('Erro ao excluir o usuário. Tente novamente.');
                     }
-                });
+                },
+                error: function() {
+                    alert('Erro ao fazer a requisição. Tente novamente.');
+                }
             });
-            $('#deleteModal').modal('show');
-        };
-    });
+        });
+        $('#deleteModal').modal('show');
+    };
+});
+
 </script>
 
 </body>
