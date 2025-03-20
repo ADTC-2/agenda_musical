@@ -221,21 +221,21 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
     </div>
 
-    <!-- Modal para excluir usuário -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" style="display: block;" inert>
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Excluir Usuário</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Tem certeza de que deseja excluir este usuário?</p>
-                    <button type="button" id="deleteConfirm" class="btn btn-danger w-100">Excluir</button>
-                </div>
+<!-- Modal para excluir usuário -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Excluir Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza de que deseja excluir este usuário?</p>
+                <button type="button" id="deleteConfirm" class="btn btn-danger w-100">Excluir</button>
             </div>
         </div>
     </div>
+</div>
     <br><br>
     <!-- Menu inferior fixo para Admin -->
     <footer class="menu-bottom">
@@ -430,34 +430,37 @@ $(document).ready(function () {
         });
     });
 
-    // Excluir usuário
-    window.deleteUser = function (id) {
-        $('#deleteConfirm').off('click').on('click', function () {
-            $.ajax({
-                url: `../../controllers/UsuarioController.php`,
-                method: 'POST',
-                data: { action: 'delete', id: id },
-                success: function (response) {
-                    try {
-                        if (response.status === "success") {
-                            alert(response.message);
-                            $('#deleteModal').modal('hide');
-                            carregarUsuarios();
-                        } else {
-                            alert(response.message);
-                        }
-                    } catch (error) {
-                        console.error('Erro ao processar a resposta:', error);
-                        alert('Erro ao excluir o usuário. Tente novamente.');
+// Excluir usuário
+window.deleteUser = function (id) {
+    // Exibir o modal de exclusão
+    $('#deleteModal').modal('show');
+
+    // Associar o evento de clique ao botão de confirmação de exclusão
+    $('#deleteConfirm').off('click').on('click', function () {
+        $.ajax({
+            url: `../../controllers/UsuarioController.php`,
+            method: 'POST',
+            data: { action: 'delete', id: id },
+            success: function (response) {
+                try {
+                    if (response.status === "success") {
+                        alert(response.message);
+                        $('#deleteModal').modal('hide');
+                        carregarUsuarios();
+                    } else {
+                        alert(response.message);
                     }
-                },
-                error: function() {
-                    alert('Erro ao fazer a requisição. Tente novamente.');
+                } catch (error) {
+                    console.error('Erro ao processar a resposta:', error);
+                    alert('Erro ao excluir o usuário. Tente novamente.');
                 }
-            });
+            },
+            error: function() {
+                alert('Erro ao fazer a requisição. Tente novamente.');
+            }
         });
-        $('#deleteModal').modal('show');
-    };
+    });
+};
 });
 </script>
 
