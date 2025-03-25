@@ -258,7 +258,7 @@ $(document).ready(function () {
                                 </div>
                                 <hr class="my-2">
                                 <div class="d-flex gap-2">                                            
-                                    <a href="../repertorio/index.php" class="btn btn-danger btn-sm flex-grow-1">
+                                    <a href="../repertorio/index.php?evento_id=${evento.id}" class="btn btn-danger btn-sm flex-grow-1">
                                         <i class="fas fa-music me-1"></i> Repertório
                                     </a>
                                     <button class="btn btn-warning btn-sm flex-grow-1 btn-editar" data-id="${evento.id}" data-nome="${evento.nome}" data-data="${evento.data_hora}">

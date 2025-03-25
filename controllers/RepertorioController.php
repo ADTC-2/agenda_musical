@@ -187,6 +187,39 @@ class RepertorioController {
             ]);
         }
     }
+    private function buscarPorRepertorio() {
+        try {
+            $repertorio_id = isset($_GET['repertorio_id']) ? (int)$_GET['repertorio_id'] : 0;
+            
+            if (!$repertorio_id) {
+                throw new Exception("ID do repertório não fornecido.");
+            }
+    
+            // Busca as músicas associadas ao repertório
+            $query = "SELECT m.id, m.titulo, m.tom, m.tipo, m.cantor_banda, rm.categoria 
+                      FROM musicas m
+                      JOIN repertorio_musica rm ON m.id = rm.musica_id
+                      WHERE rm.repertorio_id = :repertorio_id
+                      ORDER BY m.titulo";
+            
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':repertorio_id', $repertorio_id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $musicas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            echo json_encode([
+                "status" => "success", 
+                "data" => $musicas
+            ]);
+        } catch (Exception $e) {
+            error_log("Erro ao buscar músicas do repertório: " . $e->getMessage());
+            echo json_encode([
+                "status" => "error", 
+                "message" => "Erro ao buscar músicas do repertório: " . $e->getMessage()
+            ]);
+        }
+    }
 }
 
 $repertorioController = new RepertorioController($pdo);

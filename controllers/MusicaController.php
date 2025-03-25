@@ -93,10 +93,10 @@ class MusicaController
 
     private function editar()
     {
-        if (empty($_POST['id']) || empty($_POST['titulo']) || empty($_POST['tipo'])) {
+       /* if (empty($_POST['id']) || empty($_POST['titulo']) || empty($_POST['tipo'])) {
             echo json_encode(["status" => "error", "message" => "ID, título e tipo da música são obrigatórios."]);
             return;
-        }
+        }*/
 
         $result = $this->musicaModel->editar(
             $_POST['id'],

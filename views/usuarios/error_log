@@ -1,0 +1,55 @@
+[18-Mar-2025 06:31:36 America/Fortaleza] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'usuario'@'localhost' (using password: YES) in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/list.php:13
+Stack trace:
+#0 /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/list.php(13): mysqli->__construct('localhost', 'usuario', Object(SensitiveParameterValue), 'banco_de_dados')
+#1 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/list.php on line 13
+[19-Mar-2025 09:37:39 America/Fortaleza] PHP Warning:  require_once(../../config.php): Failed to open stream: No such file or directory in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php on line 2
+[19-Mar-2025 09:37:39 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php:2
+Stack trace:
+#0 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php on line 2
+[19-Mar-2025 09:37:45 America/Fortaleza] PHP Warning:  require_once(../../config.php): Failed to open stream: No such file or directory in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php on line 2
+[19-Mar-2025 09:37:45 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php:2
+Stack trace:
+#0 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php on line 2
+[19-Mar-2025 09:38:34 America/Fortaleza] PHP Warning:  require_once(../../config.php): Failed to open stream: No such file or directory in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php on line 2
+[19-Mar-2025 09:38:34 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php:2
+Stack trace:
+#0 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php on line 2
+[19-Mar-2025 09:39:58 America/Fortaleza] PHP Warning:  require_once(../../config.php): Failed to open stream: No such file or directory in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php on line 2
+[19-Mar-2025 09:39:58 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php:2
+Stack trace:
+#0 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/create.php on line 2
+[19-Mar-2025 10:46:35 America/Fortaleza] PHP Warning:  require_once(../../config.php): Failed to open stream: No such file or directory in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/edit.php on line 10
+[19-Mar-2025 10:46:35 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/edit.php:10
+Stack trace:
+#0 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/edit.php on line 10
+[19-Mar-2025 11:13:29 America/Fortaleza] PHP Warning:  require_once(../controllers/UsuarioController.php): Failed to open stream: No such file or directory in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/edit.php on line 13
+[19-Mar-2025 11:13:29 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../controllers/UsuarioController.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/edit.php:13
+Stack trace:
+#0 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/edit.php on line 13
+[19-Mar-2025 11:23:46 America/Fortaleza] PHP Warning:  require_once(../controllers/UsuarioController.php): Failed to open stream: No such file or directory in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/list.php on line 13
+[19-Mar-2025 11:23:46 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../controllers/UsuarioController.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/list.php:13
+Stack trace:
+#0 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/list.php on line 13
+[19-Mar-2025 13:53:24 America/Fortaleza] PHP Warning:  require_once(../includes/header): Failed to open stream: No such file or directory in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/index.php on line 1
+[19-Mar-2025 13:53:24 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/header' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/index.php:1
+Stack trace:
+#0 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/index.php on line 1
+[19-Mar-2025 13:53:29 America/Fortaleza] PHP Warning:  require_once(../includes/header): Failed to open stream: No such file or directory in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/index.php on line 1
+[19-Mar-2025 13:53:29 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/header' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/index.php:1
+Stack trace:
+#0 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/index.php on line 1
+[19-Mar-2025 13:56:40 America/Fortaleza] PHP Warning:  require_once(../includes/header): Failed to open stream: No such file or directory in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/index.php on line 1
+[19-Mar-2025 13:56:40 America/Fortaleza] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/header' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/index.php:1
+Stack trace:
+#0 {main}
+  thrown in /home1/adtc2m99/public_html/sistemas/agenda_musical/views/usuarios/index.php on line 1

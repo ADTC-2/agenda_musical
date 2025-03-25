@@ -278,42 +278,55 @@ if (!isset($_SESSION['usuario_id'])) {
 $(document).ready(function() {
     // Função para carregar músicas
     function carregarMusicas() {
-        $.ajax({
-            url: '../../controllers/MusicaController.php',
-            method: 'POST',
-            data: { action: 'listar' },
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === "success") {
-                    $('#musicasList').empty();
-                    if (response.data.length > 0) {
-                        response.data.forEach(function(musica) {
-                            $('#musicasList').append(`
-                                <div class="col-md-4">
-                                    <div class="musica-card">
-                                        <h5>${musica.titulo}</h5>
-                                        <p><strong>Cantor/Banda:</strong> ${musica.cantor_banda}</p>
-                                        <p><strong>Tipo:</strong> ${musica.tipo}</p>
-                                        <p><strong>Tom:</strong> ${musica.tom}</p>
-                                        <p><strong>BPM:</strong> ${musica.bpm}</p>
-                                        <button class="btn btn-warning edit-btn" data-id="${musica.id}">Editar</button>
-                                        <button class="btn btn-danger delete-btn" data-id="${musica.id}">Excluir</button>
+    $.ajax({
+        url: '../../controllers/MusicaController.php',
+        method: 'POST',
+        data: { action: 'listar' },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === "success") {
+                $('#musicasList').empty();
+                if (response.data.length > 0) {
+                    response.data.forEach(function(musica) {
+                        // Criar elementos para link e arquivo se existirem
+                        let linkHtml = musica.link ? 
+                            `<p><strong>Link:</strong> <a href="${musica.link}" target="_blank">Acessar</a></p>` : '';
+                        
+                        let arquivoHtml = musica.arquivo ? 
+                            `<p><strong>Arquivo:</strong> <a href="../../uploads/${musica.arquivo}" target="_blank">Download</a></p>` : '';
+
+                        $('#musicasList').append(`
+                            <div class="col-md-4 mb-4">
+                                <div class="musica-card card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${musica.titulo}</h5>
+                                        <p class="card-text"><strong>Cantor/Banda:</strong> ${musica.cantor_banda}</p>
+                                        <p class="card-text"><strong>Tipo:</strong> ${musica.tipo}</p>
+                                        <p class="card-text"><strong>Tom:</strong> ${musica.tom}</p>
+                                        <p class="card-text"><strong>BPM:</strong> ${musica.bpm}</p>
+                                        ${linkHtml}
+                                        ${arquivoHtml}
+                                    </div>
+                                    <div class="card-footer bg-transparent">
+                                        <button class="btn btn-warning btn-sm edit-btn" data-id="${musica.id}">Editar</button>
+                                        <button class="btn btn-danger btn-sm delete-btn" data-id="${musica.id}">Excluir</button>
                                     </div>
                                 </div>
-                            `);
-                        });
-                    } else {
-                        $('#musicasList').html('<p class="text-center">Nenhuma música encontrada.</p>');
-                    }
+                            </div>
+                        `);
+                    });
                 } else {
-                    Swal.fire('Erro', response.message || 'Erro ao carregar músicas.', 'error');
+                    $('#musicasList').html('<div class="col-12"><p class="text-center">Nenhuma música encontrada.</p></div>');
                 }
-            },
-            error: function(xhr, status, error) {
-                Swal.fire('Erro', 'Erro ao carregar músicas: ' + error, 'error');
+            } else {
+                Swal.fire('Erro', response.message || 'Erro ao carregar músicas.', 'error');
             }
-        });
-    }
+        },
+        error: function(xhr, status, error) {
+            Swal.fire('Erro', 'Erro ao carregar músicas: ' + error, 'error');
+        }
+    });
+}
 
     // Carregar músicas ao abrir a página
     carregarMusicas();
