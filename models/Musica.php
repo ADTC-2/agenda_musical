@@ -30,10 +30,13 @@ class Musica
 
     // Métodos CRUD
 
-    public function listar()
-    {
+    public function listar() {
         $stmt = $this->pdo->query("SELECT * FROM musicas ORDER BY titulo");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($stmt) {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return false;
+        }
     }
 
     public function buscarPorId($id)
@@ -44,7 +47,7 @@ class Musica
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function cadastrar($titulo, $cantor_banda, $tom, $bpm, $link, $arquivo)
+    public function cadastrar($titulo, $cantor_banda, $tipo, $tom, $bpm, $link, $arquivo)
     {
         $this->setTitulo($titulo);
         $this->setCantorBanda($cantor_banda);
@@ -52,21 +55,24 @@ class Musica
         $this->setBpm($bpm);
         $this->setLink($link);
         $this->setArquivo($arquivo);
-
-        $stmt = $this->pdo->prepare("INSERT INTO musicas (titulo, cantor_banda, tom, bpm, link, arquivo) 
-                                     VALUES (:titulo, :cantor_banda, :tom, :bpm, :link, :arquivo)");
-
+    
+        // Prepara a query SQL
+        $stmt = $this->pdo->prepare("INSERT INTO musicas (titulo, cantor_banda, tipo, tom, bpm, link, arquivo) 
+                                     VALUES (:titulo, :cantor_banda, :tipo, :tom, :bpm, :link, :arquivo)");
+    
+        // Executa a query com os parâmetros
         $stmt->bindParam(':titulo', $this->titulo);
         $stmt->bindParam(':cantor_banda', $this->cantor_banda);
+        $stmt->bindParam(':tipo', $tipo);
         $stmt->bindParam(':tom', $this->tom);
         $stmt->bindParam(':bpm', $this->bpm);
         $stmt->bindParam(':link', $this->link);
         $stmt->bindParam(':arquivo', $this->arquivo);
-
+    
         return $stmt->execute();
     }
 
-    public function editar($id, $titulo, $cantor_banda, $tom, $bpm, $link, $arquivo)
+    public function editar($id, $titulo, $cantor_banda, $tipo, $tom, $bpm, $link, $arquivo)
     {
         $this->setId($id);
         $this->setTitulo($titulo);
@@ -75,32 +81,29 @@ class Musica
         $this->setBpm($bpm);
         $this->setLink($link);
         $this->setArquivo($arquivo);
-    
+
         $stmt = $this->pdo->prepare("UPDATE musicas 
-                                     SET titulo = :titulo, cantor_banda = :cantor_banda, tom = :tom, bpm = :bpm, link = :link, arquivo = :arquivo 
+                                     SET titulo = :titulo, cantor_banda = :cantor_banda, tipo = :tipo, tom = :tom, bpm = :bpm, link = :link, arquivo = :arquivo 
                                      WHERE id = :id");
-    
+
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
         $stmt->bindParam(':titulo', $this->titulo);
         $stmt->bindParam(':cantor_banda', $this->cantor_banda);
+        $stmt->bindParam(':tipo', $tipo);
         $stmt->bindParam(':tom', $this->tom);
         $stmt->bindParam(':bpm', $this->bpm);
         $stmt->bindParam(':link', $this->link);
         $stmt->bindParam(':arquivo', $this->arquivo);
-    
+
         return $stmt->execute();
     }
 
     public function excluir($id)
     {
         $this->setId($id);
-        
-        // Mudando para a tabela de usuários
         $stmt = $this->pdo->prepare("DELETE FROM musicas WHERE id = :id");
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-    
-        return $stmt->execute();  // Retorna o sucesso ou falha da execução
+        return $stmt->execute();
     }
-    
 }
 ?>

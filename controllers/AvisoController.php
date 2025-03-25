@@ -1,6 +1,6 @@
 <?php
 require_once '../config/database.php';
-require_once '../models/Escala.php';
+require_once '../models/Aviso.php';
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -9,11 +9,11 @@ ini_set('error_log', '../logs/php_errors.log');
 
 header('Content-Type: application/json');
 
-class EscalaController {
+class AvisoController {
     private $model;
 
     public function __construct($pdo) {
-        $this->model = new EscalaModel($pdo);
+        $this->model = new AvisoModel($pdo);
     }
 
     public function handleRequest() {
@@ -55,52 +55,70 @@ class EscalaController {
     }
 
     private function listar() {
-        $escalas = $this->model->listar();
-        if ($escalas) {
-            echo json_encode(["status" => "success", "data" => $escalas]);
+        $avisos = $this->model->listar();
+        if ($avisos) {
+            echo json_encode(["status" => "success", "data" => $avisos]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Nenhuma escala encontrada."]);
+            echo json_encode(["status" => "error", "message" => "Nenhum aviso encontrado."]);
         }
     }
 
     private function editar() {
         $data = json_decode(file_get_contents('php://input'), true);
-        $escala = $this->model->buscarPorId($data['id']);
-        if ($escala) {
-            echo json_encode(["status" => "success", "data" => $escala]);
+        $aviso = $this->model->buscarPorId($data['id']);
+        if ($aviso) {
+            echo json_encode(["status" => "success", "data" => $aviso]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Escala não encontrada."]);
+            echo json_encode(["status" => "error", "message" => "Aviso não encontrado."]);
         }
     }
 
     private function atualizar() {
         $data = json_decode(file_get_contents('php://input'), true);
-        $result = $this->model->editar(
-            $data['id'],
-            $data['culto_id'],
-            $data['usuario_id'],
-            $data['instrumento']
-        );
-        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Escala atualizada com sucesso!" : "Erro ao atualizar escala."]);
+        $result = $this->model->editar($data['id'], $data['titulo'], $data['mensagem'], $data['tipo'], $data['usuario_id']);
+        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Aviso atualizado com sucesso!" : "Erro ao atualizar aviso."]);
     }
 
     private function cadastrar() {
+        session_start(); // Inicia a sessão se não estiver iniciada
+        
+        // Verifica se o usuário está logado
+        if (!isset($_SESSION['usuario_id'])) {
+            echo json_encode(["status" => "error", "message" => "Usuário não autenticado."]);
+            return;
+        }
+    
         $data = json_decode(file_get_contents('php://input'), true);
+        
+        // Valida campos obrigatórios (exceto usuario_id que vem da sessão)
+        $required = ['titulo', 'mensagem', 'tipo'];
+        foreach ($required as $field) {
+            if (!isset($data[$field])) {
+                echo json_encode(["status" => "error", "message" => "Campo '$field' é obrigatório."]);
+                return;
+            }
+        }
+        
         $result = $this->model->cadastrar(
-            $data['culto_id'],
-            $data['usuario_id'],
-            $data['instrumento']
+            $data['titulo'], 
+            $data['mensagem'], 
+            $data['tipo'], 
+            $_SESSION['usuario_id'] // Pega da sessão
         );
-        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Escala cadastrada com sucesso!" : "Erro ao cadastrar escala."]);
+        
+        echo json_encode([
+            "status" => $result ? "success" : "error", 
+            "message" => $result ? "Aviso cadastrado com sucesso!" : "Erro ao cadastrar aviso."
+        ]);
     }
 
     private function deletar() {
         $data = json_decode(file_get_contents('php://input'), true);
         $result = $this->model->deletar($data['id']);
-        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Escala excluída com sucesso!" : "Erro ao excluir escala."]);
+        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Aviso excluído com sucesso!" : "Erro ao excluir aviso."]);
     }
 }
 
-$escalaController = new EscalaController($pdo);
-$escalaController->handleRequest();
+$avisoController = new AvisoController($pdo);
+$avisoController->handleRequest();
 ?>

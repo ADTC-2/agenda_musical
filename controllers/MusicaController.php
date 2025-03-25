@@ -1,4 +1,5 @@
 <?php
+require_once '../config/database.php';
 require_once '../models/Musica.php';
 
 error_reporting(E_ALL);
@@ -19,17 +20,7 @@ class MusicaController
 
     public function handleRequest()
     {
-        $action = $_GET['action'] ?? '';
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $json = file_get_contents('php://input');
-            $data = json_decode($json, true);
-            if (!$data) {
-                echo json_encode(["status" => "error", "message" => "Erro ao processar JSON."]);
-                exit;
-            }
-            $action = $data['action'] ?? '';
-        }
+        $action = $_POST['action'] ?? '';
 
         try {
             switch ($action) {
@@ -56,8 +47,7 @@ class MusicaController
         }
     }
 
-    private function listar()
-    {
+    private function listar() {
         $musicas = $this->musicaModel->listar();
         if ($musicas) {
             echo json_encode(["status" => "success", "data" => $musicas]);
@@ -68,20 +58,19 @@ class MusicaController
 
     private function cadastrar()
     {
-        $data = json_decode(file_get_contents('php://input'), true);
-
-        if (empty($data['titulo'])) {
-            echo json_encode(["status" => "error", "message" => "O título da música é obrigatório."]);
+        if (empty($_POST['titulo']) || empty($_POST['tipo'])) {
+            echo json_encode(["status" => "error", "message" => "O título e o tipo da música são obrigatórios."]);
             return;
         }
 
         $result = $this->musicaModel->cadastrar(
-            $data['titulo'], 
-            $data['cantorBanda'] ?? '', 
-            $data['tom'] ?? '', 
-            $data['bpm'] ?? 0, 
-            $data['link'] ?? '', 
-            $data['arquivo'] ?? ''
+            $_POST['titulo'], 
+            $_POST['cantor_banda'] ?? '', 
+            $_POST['tipo'], 
+            $_POST['tom'] ?? '', 
+            $_POST['bpm'] ?? 0, 
+            $_POST['link'] ?? '', 
+            $_POST['arquivo'] ?? ''
         );
 
         echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Música cadastrada com sucesso!" : "Erro ao cadastrar música."]);
@@ -89,13 +78,12 @@ class MusicaController
 
     private function buscar()
     {
-        $data = json_decode(file_get_contents('php://input'), true);
-        if (empty($data['id'])) {
+        if (empty($_POST['id'])) {
             echo json_encode(["status" => "error", "message" => "ID da música é obrigatório."]);
             return;
         }
 
-        $musica = $this->musicaModel->buscarPorId($data['id']);
+        $musica = $this->musicaModel->buscarPorId($_POST['id']);
         if ($musica) {
             echo json_encode(["status" => "success", "data" => $musica]);
         } else {
@@ -105,56 +93,45 @@ class MusicaController
 
     private function editar()
     {
-        $data = json_decode(file_get_contents('php://input'), true);
-    
-        if (empty($data['id']) || empty($data['titulo'])) {
-            echo json_encode(["status" => "error", "message" => "ID e título da música são obrigatórios."]);
+        if (empty($_POST['id']) || empty($_POST['titulo']) || empty($_POST['tipo'])) {
+            echo json_encode(["status" => "error", "message" => "ID, título e tipo da música são obrigatórios."]);
             return;
         }
-    
+
         $result = $this->musicaModel->editar(
-            $data['id'],
-            $data['titulo'],
-            $data['cantorBanda'] ?? '',
-            $data['tom'] ?? '',
-            $data['bpm'] ?? 0,
-            $data['link'] ?? '',
-            $data['arquivo'] ?? ''
+            $_POST['id'],
+            $_POST['titulo'],
+            $_POST['cantor_banda'] ?? '',
+            $_POST['tipo'],
+            $_POST['tom'] ?? '',
+            $_POST['bpm'] ?? 0,
+            $_POST['link'] ?? '',
+            $_POST['arquivo'] ?? ''
         );
-    
+
         echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Música atualizada com sucesso!" : "Erro ao atualizar música."]);
     }
 
- // Método de exclusão corrigido
- private function excluir()
- {
-     $data = json_decode(file_get_contents('php://input'), true); // Decodifica o JSON enviado via POST
+    private function excluir()
+    {
+        if (empty($_POST['id'])) {
+            echo json_encode(["status" => "error", "message" => "ID da música é obrigatório."]);
+            return;
+        }
 
-     if (empty($data['id'])) {
-         // Se não passar um ID, responde com erro
-         echo json_encode(["status" => "error", "message" => "ID da música é obrigatório."]);
-         return;
-     }
+        $result = $this->musicaModel->excluir($_POST['id']);
 
-     // Chama o método de exclusão do model
-     $result = $this->musicaModel->excluir($data['id']); // Chama a exclusão correta no modelo de usuários
+        $response = [
+            "status" => $result ? "success" : "error", 
+            "message" => $result ? "Música excluída com sucesso!" : "Erro ao excluir música."
+        ];
 
-     // Responde com o status da operação
-     $response = [
-         "status" => $result ? "success" : "error", 
-         "message" => $result ? "Música excluída com sucesso!" : "Erro ao excluir música."
-     ];
-
-     // Certifique-se de que o cabeçalho da resposta está correto
-     header('Content-Type: application/json');  // Adiciona esse cabeçalho para indicar que é JSON
-     echo json_encode($response);  // Retorna o JSON
- }
-
-    
-    
+        echo json_encode($response);
+    }
 }
 
 // Assuming you have a PDO instance available
+
 $musicaController = new MusicaController($pdo);
 $musicaController->handleRequest();
 ?>

@@ -90,14 +90,14 @@ if (session_status() === PHP_SESSION_NONE) {
 </head>
 
 <body>
-    <header class="header">
+<header class="header">
         <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
             <div class="container-fluid">
                 <button class="navbar-toggler me-auto" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Abrir menu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <a class="navbar-brand" href="../dashboard.php">Agenda Musical</a>
+                <a class="navbar-brand" href="dashboard.php">Agenda Musical</a>
 
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="menuLateral">
                     <div class="offcanvas-header">
@@ -107,13 +107,23 @@ if (session_status() === PHP_SESSION_NONE) {
                     <div class="offcanvas-body">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link active" href="../dashboard.php">
+                                <a class="nav-link active" href="dashboard.php">
                                     <i class="fas fa-home"></i> Home
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" href="../cultos/index.php">
                                     <i class="fas fa-home"></i> Cultos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="../eventos/index.php">
+                                    <i class="fas fa-home"></i> Eventos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="../escalas/index.php">
+                                <i class="fas fa-calendar-alt"></i> Escalas
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -240,20 +250,14 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Menu inferior fixo para Admin -->
     <footer class="menu-bottom">
         <nav>
-            <a href="../escalas/index.php" class="menu-item" aria-label="Escalas">
-                <i class="fas fa-calendar-alt"></i> Escalas
-            </a>
-            <a href="../repertorio/index.php" class="menu-item" aria-label="Repertório">
-                <i class="fas fa-book"></i> Repertório
-            </a>
-            <a href="../musicas/index.php" class="menu-item" aria-label="Músicas">
-                <i class="fas fa-music"></i> Músicas
-            </a>
-            <a href="../usuarios/index.php" class="menu-item" aria-label="Usuários">
-                <i class="fas fa-users"></i> Usuários
+            <a href="../eventos/index.php" class="menu-item" aria-label="Escalas">
+                <i class="fas fa-home"></i> Eventos
             </a>
             <a href="../avisos/index.php" class="menu-item" aria-label="Avisos">
                 <i class="fas fa-bell"></i> Avisos
+            </a>
+            <a href="../usuarios/index.php" class="menu-item" aria-label="Usuários">
+                <i class="fas fa-users"></i> Usuários
             </a>
         </nav>
     </footer>

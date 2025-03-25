@@ -1,33 +1,58 @@
+-- Tabela de Usuários
+CREATE TABLE `usuarios` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `tipo` enum('admin','musico','regente') NOT NULL DEFAULT 'regente',
+  `criado_em` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email_unique` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
+-- Tabela de Escalas
+CREATE TABLE IF NOT EXISTS escalas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    evento_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    observacoes VARCHAR(250),
+    FOREIGN KEY (evento_id) REFERENCES eventos(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
 
-CREATE TABLE usuarios (
+-- Tabela de Eventos
+CREATE TABLE IF NOT EXISTS eventos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    senha VARCHAR(255) NOT NULL,
-    tipo ENUM('admin', 'musico', 'usuario') DEFAULT 'usuario',
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    data_hora DATETIME NOT NULL
 );
 
-
-
-CREATE TABLE cultos (
+-- Tabela de Repertórios
+CREATE TABLE IF NOT EXISTS repertorios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    titulo VARCHAR(100) NOT NULL,
-    data_hora DATETIME NOT NULL,
-    local VARCHAR(255),
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    evento_id INT NOT NULL,
+    FOREIGN KEY (evento_id) REFERENCES eventos(id) ON DELETE CASCADE
 );
 
 
-
-CREATE TABLE musicas (
+-- Tabela de Relacionamento entre Repertórios e Músicas
+CREATE TABLE IF NOT EXISTS repertorio_musica (
+    repertorio_id INT NOT NULL,
+    musica_id INT NOT NULL,
+    categoria ENUM('criança', 'adolescente', 'jovem', 'senhoras') NOT NULL,
+    PRIMARY KEY (repertorio_id, musica_id),
+    FOREIGN KEY (repertorio_id) REFERENCES repertorios(id) ON DELETE CASCADE,
+    FOREIGN KEY (musica_id) REFERENCES musicas(id) ON DELETE CASCADE
+);
+-- Tabela de Músicas
+CREATE TABLE IF NOT EXISTS musicas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(100) NOT NULL,
     cantor_banda VARCHAR(100),
-    tom VARCHAR(5),
+    tipo ENUM('Louvor', 'Harpa Cristã') NOT NULL,
+    tom VARCHAR(10),
     bpm INT,
     link VARCHAR(255),
     arquivo VARCHAR(255),
@@ -37,38 +62,18 @@ CREATE TABLE musicas (
 
 
 
-CREATE TABLE repertorios (
+
+-- Tabela de Avisos
+CREATE TABLE IF NOT EXISTS avisos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    culto_id INT NOT NULL,
-    musica_id INT NOT NULL,
-    categoria ENUM('criança', 'adolescente', 'jovem', 'senhoras') NOT NULL,
-    FOREIGN KEY (culto_id) REFERENCES cultos(id) ON DELETE CASCADE,
-    FOREIGN KEY (musica_id) REFERENCES musicas(id) ON DELETE CASCADE
+    titulo VARCHAR(100) NOT NULL,
+    mensagem TEXT NOT NULL,
+    tipo ENUM('geral', 'musico', 'admin') DEFAULT 'geral',
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    usuario_id INT,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
 );
 
-
-
-
-CREATE TABLE escalas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    culto_id INT NOT NULL,
-    usuario_id INT NOT NULL,
-    instrumento VARCHAR(50),
-    FOREIGN KEY (culto_id) REFERENCES cultos(id) ON DELETE CASCADE,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-);
-
-
-
-
-
-CREATE TABLE tokens_recuperacao (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    token VARCHAR(255) NOT NULL,
-    expira_em DATETIME NOT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-);
 
 
 

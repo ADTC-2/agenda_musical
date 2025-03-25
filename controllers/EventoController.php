@@ -1,6 +1,6 @@
 <?php
 require_once '../config/database.php';
-require_once '../models/Escala.php';
+require_once '../models/EventoModel.php';
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -9,11 +9,11 @@ ini_set('error_log', '../logs/php_errors.log');
 
 header('Content-Type: application/json');
 
-class EscalaController {
+class EventoController {
     private $model;
 
     public function __construct($pdo) {
-        $this->model = new EscalaModel($pdo);
+        $this->model = new EventoModel($pdo);
     }
 
     public function handleRequest() {
@@ -55,52 +55,53 @@ class EscalaController {
     }
 
     private function listar() {
-        $escalas = $this->model->listar();
-        if ($escalas) {
-            echo json_encode(["status" => "success", "data" => $escalas]);
+        $eventos = $this->model->listar();
+        if ($eventos) {
+            echo json_encode(["status" => "success", "data" => $eventos]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Nenhuma escala encontrada."]);
+            echo json_encode(["status" => "error", "message" => "Nenhum evento encontrado."]);
         }
     }
 
     private function editar() {
         $data = json_decode(file_get_contents('php://input'), true);
-        $escala = $this->model->buscarPorId($data['id']);
-        if ($escala) {
-            echo json_encode(["status" => "success", "data" => $escala]);
+        $evento = $this->model->buscarPorId($data['id']);
+        if ($evento) {
+            echo json_encode(["status" => "success", "data" => $evento]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Escala não encontrada."]);
+            echo json_encode(["status" => "error", "message" => "Evento não encontrado."]);
         }
     }
 
     private function atualizar() {
         $data = json_decode(file_get_contents('php://input'), true);
-        $result = $this->model->editar(
-            $data['id'],
-            $data['culto_id'],
-            $data['usuario_id'],
-            $data['instrumento']
-        );
-        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Escala atualizada com sucesso!" : "Erro ao atualizar escala."]);
+        $result = $this->model->editar($data['id'], $data['nome'], $data['data_hora']);
+        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Evento atualizado com sucesso!" : "Erro ao atualizar evento."]);
     }
 
     private function cadastrar() {
         $data = json_decode(file_get_contents('php://input'), true);
-        $result = $this->model->cadastrar(
-            $data['culto_id'],
-            $data['usuario_id'],
-            $data['instrumento']
-        );
-        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Escala cadastrada com sucesso!" : "Erro ao cadastrar escala."]);
+    
+        // Verifica se as chaves necessárias estão presentes no array
+        if (!isset($data['nome']) || !isset($data['data_hora'])) {
+            echo json_encode(["status" => "error", "message" => "Dados incompletos. 'nome' e 'data_hora' são obrigatórios."]);
+            return;
+        }
+    
+        $nome = $data['nome'];
+        $data_hora = $data['data_hora'];
+    
+        $result = $this->model->cadastrar($nome, $data_hora);
+        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Evento cadastrado com sucesso!" : "Erro ao cadastrar evento."]);
     }
 
     private function deletar() {
         $data = json_decode(file_get_contents('php://input'), true);
         $result = $this->model->deletar($data['id']);
-        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Escala excluída com sucesso!" : "Erro ao excluir escala."]);
+        echo json_encode(["status" => $result ? "success" : "error", "message" => $result ? "Evento excluído com sucesso!" : "Erro ao excluir evento."]);
     }
 }
 
-$escalaController = new EscalaController($pdo);
-$escalaController->handleRequest();
+$eventoController = new EventoController($pdo);
+$eventoController->handleRequest();
 ?>

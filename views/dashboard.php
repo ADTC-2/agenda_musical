@@ -84,6 +84,11 @@ $eventos = array_fill(0, 6, ['mes' => 'Março', 'status' => 'Finalizado']); // S
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link active" href="../views/eventos/index.php">
+                                    <i class="fas fa-home"></i> Eventos
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="../controllers/AuthController.php?action=logout">
                                     <i class="fas fa-sign-out-alt"></i> Sair
                                 </a>
@@ -113,20 +118,14 @@ $eventos = array_fill(0, 6, ['mes' => 'Março', 'status' => 'Finalizado']); // S
     <!-- Menu inferior fixo para Admin -->
     <footer class="menu-bottom">
         <nav>
-            <a href="../views/escalas/index.php" class="menu-item" aria-label="Escalas">
-                <i class="fas fa-calendar-alt"></i> Escalas
+            <a href="./eventos/index.php" class="menu-item" aria-label="Escalas">
+                <i class="fas fa-home"></i> Eventos
             </a>
-            <a href="../views/repertorio/index.php" class="menu-item" aria-label="Repertório">
-                <i class="fas fa-book"></i> Repertório
-            </a>
-            <a href="../views/musicas/index.php" class="menu-item" aria-label="Músicas">
-                <i class="fas fa-music"></i> Músicas
-            </a>
-            <a href="../views/usuarios/index.php" class="menu-item" aria-label="Usuários">
-                <i class="fas fa-users"></i> Usuários
-            </a>
-            <a href="#" class="menu-item" aria-label="Avisos">
+            <a href="./avisos/index.php" class="menu-item" aria-label="Avisos">
                 <i class="fas fa-bell"></i> Avisos
+            </a>
+            <a href="./usuarios/index.php" class="menu-item" aria-label="Usuários">
+                <i class="fas fa-users"></i> Usuários
             </a>
         </nav>
     </footer>
